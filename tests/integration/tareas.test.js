@@ -67,42 +67,57 @@ describe('EJEMPLOS PRACTICOS DE PRUEBAS DE INTEGRACION', () => {
     console.log("👨🏻‍💻 GET - Revisión de datos en la BD antes de la prueba",TareaInDB);
   });
 
-  // EJERCICIO 3: Implementar la prueba para obtener una tarea específica
-  test('TODO: GET /api/tareas/:id devuelve una tarea específica', async () => {
-    // PISTA:
-    // 1. Crea una tarea en la base de datos para obtener su `_id`.
-    // 2. Haz una petición `GET` a la ruta dinámica `/api/tareas/:id`.
-    // 3. Verifica el `statusCode` (200) y que el `title` de la respuesta coincida con el de la tarea que creaste.
-    
-    expect(true).toBe(true); // Placeholder - ¡reemplazar!
-  });
+ // EJERCICIO 3: Implementar la prueba para obtener una tarea específica
+test('GET /api/tareas/:id devuelve una tarea específica', async () => {
+  // 1) Crear una tarea
+  const creada = await Tarea.create({ title: 'Una tarea puntual' });
+
+  // 2) Hacer GET a la ruta dinámica
+  const res = await request(app).get(`/api/tareas/${creada._id}`);
+
+  // 3) Verificar status y contenido
+  expect(res.statusCode).toBe(200);
+  expect(res.body).toBeTruthy();
+  expect(res.body._id).toBe(String(creada._id));
+  expect(res.body.title).toBe('Una tarea puntual');
+});
+
 
   // ✅ EJERCICIO 4: Implementar la prueba para un ID inexistente
-  test('TODO: GET /api/tareas/:id devuelve 404 para un ID inexistente', async () => {
-    // PISTA:
-    // 1. Crea un ID válido pero que no exista en la base de datos (por ejemplo, `new mongoose.Types.ObjectId()`).
-    // 2. Haz una petición `GET` a la API con este ID.
-    // 3. Verifica que la respuesta tenga un `statusCode` de 404.
-    
-    expect(true).toBe(true); // Placeholder - ¡reemplazar!
-  });
+test('GET /api/tareas/:id devuelve 404 para un ID inexistente', async () => {
+  // 1) ID válido, pero que no existe
+  const inexistente = new mongoose.Types.ObjectId();
 
-  // EJERCICIO 5: Implementar la prueba para un campo requerido
-  test('TODO: POST /api/tareas valida campos requeridos', async () => {
-    // PISTA:
-    // 1. Haz una petición `POST` con un objeto vacío o sin el campo `title`.
-    // 2. Verifica el `statusCode` de error y que el cuerpo de la respuesta contenga un mensaje de validación.
-    
-    expect(true).toBe(true); // Placeholder - ¡reemplazar!
-  });
+  // 2) GET con ese ID
+  const res = await request(app).get(`/api/tareas/${inexistente}`);
 
-  // EJERCICIO 6: Implementar la prueba para una lista vacía
-  test('TODO: GET /api/tareas devuelve un array vacío cuando no hay tareas', async () => {
-    // PISTA:
-    // 1. Asegúrate de que no haya tareas en la base de datos (`afterEach` se encarga de esto).
-    // 2. Haz una petición `GET`.
-    // 3. Verifica que la respuesta tenga un `statusCode` de 200 y que el cuerpo sea un array vacío.
+  // 3) Debe ser 404
+  expect(res.statusCode).toBe(404);
+  // (opcional) algún mensaje de error genérico
+  expect(typeof res.body).toBe('object');
+});
+
+
+// EJERCICIO 5: Implementar la prueba para un campo requerido
+test('POST /api/tareas valida campos requeridos', async () => {
+  // 1) Enviar body inválido (sin title o title vacío)
+  const res = await request(app)
+    .post('/api/tareas')
+    .send({}); 
     
-    expect(true).toBe(true); // Placeholder - ¡reemplazar!
-  });
+  // 2) Verificar status de error y mensaje de validación
+  expect(res.statusCode).toBe(50);           //  acorde al comportamiento actual
+  expect(res.body).toHaveProperty('error');   // el controlador devuelve { error: err.message }
+  expect(typeof res.body.error).toBe('string');
+});
+
+// EJERCICIO 6: Implementar la prueba para una lista vacía
+test('GET /api/tareas devuelve un array vacío cuando no hay tareas', async () => {
+  // afterEach ya limpia la BD, así que aquí debería estar vacía
+  const res = await request(app).get('/api/tareas');
+
+  expect(res.statusCode).toBe(200);
+  expect(Array.isArray(res.body)).toBe(true);
+  expect(res.body.length).toBe(0);
+});
 });
