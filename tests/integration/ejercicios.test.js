@@ -53,7 +53,7 @@ describe('🎓 EJERCICIOS PARA ESTUDIANTES', () => {
 
     // 2) eliminar
     const delRes = await request(app).delete(`/api/tareas/${tarea._id}`);
-    // algunas APIs devuelven 204, otras 200; aceptamos ambos
+    // algunas APIs devuelven 204, otras 200;
     expect([200, 204]).toContain(delRes.statusCode);
 
     // 3) confirmar que ya no existe
@@ -67,11 +67,11 @@ describe('🎓 EJERCICIOS PARA ESTUDIANTES', () => {
       .post('/api/tareas')
       .send({ title: '' });
 
-    // según implementación puede ser 400 o 422
+    // Puede ser 400 o 422
     expect([400, 422, 500]).toContain(res.statusCode);
     expect(typeof res.body).toBe('object');
 
-    // mensaje de validación genérico (ajústalo si tu API usa otra clave)
+    // mensaje de validación genérico 
     const msg = (res.body.message || res.body.error || '').toLowerCase();
     expect(msg).toMatch(/title|requerid|requerido|valid/i);
   });
@@ -95,10 +95,6 @@ describe('🎓 EJERCICIOS PARA ESTUDIANTES', () => {
   expect(times[i]).toBeGreaterThanOrEqual(times[i - 1]);
 }
 
-    // Si tu endpoint los devuelve ascendente, usa esto en su lugar:
-    // for (let i = 1; i < times.length; i++) {
-    //   expect(times[i]).toBeGreaterThanOrEqual(times[i - 1]);
-    // }
   });
 
   // EJERCICIO 5: ID inválido (no ObjectId) debe devolver 500
