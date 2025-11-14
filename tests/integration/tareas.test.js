@@ -69,31 +69,37 @@ describe('EJEMPLOS PRACTICOS DE PRUEBAS DE INTEGRACION', () => {
 
  // EJERCICIO 3: Implementar la prueba para obtener una tarea específica
 test('GET /api/tareas/:id devuelve una tarea específica', async () => {
-  // 1) Crear una tarea
-  const creada = await Tarea.create({ title: 'Una tarea puntual' });
 
-  // 2) Hacer GET a la ruta dinámica
-  const res = await request(app).get(`/api/tareas/${creada._id}`);
+    const tarea = await Tarea.create({ title: 'Tarea específica',completed:false });
 
-  // 3) Verificar status y contenido
-  expect(res.statusCode).toBe(200);
-  expect(res.body).toBeTruthy();
-  expect(res.body._id).toBe(String(creada._id));
-  expect(res.body.title).toBe('Una tarea puntual');
-});
+    
+
+    const res = await request(app)
+
+      .get('/api/tareas/' + tarea._id);
+
+    
+
+    expect(res.statusCode).toBe(200);
+
+    expect(res.body.title).toBe('Tarea específica');
+
+    expect(res.body.completed).toBe(false);
+
+  });
 
 
   // ✅ EJERCICIO 4: Implementar la prueba para un ID inexistente
 test('GET /api/tareas/:id devuelve 404 para un ID inexistente', async () => {
   // 1) ID válido, pero que no existe
-  const inexistente = new mongoose.Types.ObjectId();
+  const inexistente = new mongoose.Types.ObjectId(); // ID en blanco
 
   // 2) GET con ese ID
   const res = await request(app).get(`/api/tareas/${inexistente}`);
 
   // 3) Debe ser 404
   expect(res.statusCode).toBe(404);
-  // (opcional) algún mensaje de error genérico
+  // mensaje de error genérico
   expect(typeof res.body).toBe('object');
 });
 
@@ -104,11 +110,11 @@ test('POST /api/tareas valida campos requeridos', async () => {
   const res = await request(app)
     .post('/api/tareas')
     .send({}); 
-    
+
   // 2) Verificar status de error y mensaje de validación
-  expect(res.statusCode).toBe(50);           //  acorde al comportamiento actual
+  expect(res.statusCode).toBe(500);           //  acorde al comportamiento actual
   expect(res.body).toHaveProperty('error');   // el controlador devuelve { error: err.message }
-  expect(typeof res.body.error).toBe('string');
+  expect(typeof res.body.error).toBe('string'); // .toBe('Mensaje de error');
 });
 
 // EJERCICIO 6: Implementar la prueba para una lista vacía
