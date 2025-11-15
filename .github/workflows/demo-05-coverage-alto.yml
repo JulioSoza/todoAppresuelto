@@ -16,21 +16,21 @@ jobs:
   coverage-profesional:
     name: "Coverage Profesional (80%)"
     runs-on: ubuntu-latest
-    
+
     steps:
     # 1. Setup básico
     - name: Obtener código
       uses: actions/checkout@v4
-    
+
     - name: Configurar Node.js
       uses: actions/setup-node@v4
       with:
         node-version: '18'
         cache: 'npm'
-    
+
     - name: Instalar dependencias
       run: npm ci
-    
+
     # 2. Información sobre este nivel
     - name: "¿Qué significa coverage 80%?"
       run: |
@@ -51,7 +51,7 @@ jobs:
         echo "  → Es una oportunidad de aprender"
         echo "  → Te motiva a escribir mejores tests"
         echo "  → Cuando lo logres, tendrás código confiable"
-    
+
     # 3. Ejecutar tests con coverage
     - name: Ejecutar tests con coverage
       run: |
@@ -59,7 +59,7 @@ jobs:
         echo "Umbral objetivo: ${{ env.COVERAGE_THRESHOLD }}%"
         echo ""
         npm run test:coverage
-    
+
     # 4. Verificación de coverage (puede fallar)
     - name: "Verificación de Coverage - Momento de la Verdad"
       run: |
@@ -67,34 +67,32 @@ jobs:
         echo "======================"
         echo ""
         echo "Extrayendo porcentaje de coverage del reporte..."
-        
-        # Método simplificado para extraer coverage
+
+        # Ejecutar pruebas y capturar salida
         COVERAGE_OUTPUT=$(npm run test:coverage 2>&1)
-        
-        # Buscar la línea que contiene "All files"
-        COVERAGE_LINE=$(echo "$COVERAGE_OUTPUT" | grep "All files")
-        
+
+        # Buscar línea que contenga 'All files'
+        COVERAGE_LINE=$(echo "$COVERAGE_OUTPUT" | grep "All files" || true)
+
         if [ -n "$COVERAGE_LINE" ]; then
           echo "Línea de coverage encontrada:"
           echo "$COVERAGE_LINE"
           echo ""
-          
-          # Extraer el porcentaje (primer número decimal)
+
+          # Extraer porcentaje decimal (ej. 87.75)
           COVERAGE_PERCENT=$(echo "$COVERAGE_LINE" | grep -oE '[0-9]+\.[0-9]+' | head -1)
-          
+
           if [ -n "$COVERAGE_PERCENT" ]; then
             echo "Coverage extraído: $COVERAGE_PERCENT%"
-            
-            # Convertir a entero para comparación
             COVERAGE_INT=$(echo "$COVERAGE_PERCENT" | cut -d'.' -f1)
-            THRESHOLD=${{ env.COVERAGE_THRESHOLD }}
-            
+            THRESHOLD=80
+
             echo ""
             echo "RESULTADO DE LA VERIFICACIÓN:"
             echo "  Coverage actual: $COVERAGE_PERCENT%"
             echo "  Threshold objetivo: $THRESHOLD%"
             echo ""
-            
+
             if [ "$COVERAGE_INT" -lt "$THRESHOLD" ]; then
               echo "COVERAGE INSUFICIENTE"
               echo "   Faltante: $((THRESHOLD - COVERAGE_INT))%"
@@ -103,7 +101,7 @@ jobs:
               echo "  → La mayoría de proyectos fallan aquí"
               echo "  → Es una oportunidad de aprender"
               echo "  → Significa que necesitas más tests"
-              exit 1  # Hacer que el paso falle
+              exit 1
             else
               echo "COVERAGE EXCELENTE"
               echo "   ¡Felicitaciones! Tu proyecto tiene excelente cobertura"
@@ -114,7 +112,7 @@ jobs:
         else
           echo "No se encontró información de coverage en el reporte"
         fi
-    
+
     # 5. Lección final (siempre se ejecuta)
     - name: "Lección: ¿Qué aprendemos del Coverage Alto?"
       if: always()
@@ -123,7 +121,13 @@ jobs:
         echo "EXPLICACIÓN DEL REPORTE:"
         echo "  Columns → | % Stmts | % Branch | % Funcs | % Lines |"
         echo "  Stmts:    Declaraciones ejecutadas"
-        echo "  Branch:   Ramas de código (if/else) probadas"  
+        echo "  Branch:   Ramas de código (if/else) probadas"
         echo "  Funcs:    Funciones llamadas en tests"
         echo "  Lines:    Líneas de código ejecutadas"
-        
+        echo ""
+        echo "ANÁLISIS FINAL:"
+        echo "  → Si tu coverage supera 80%, estás a nivel profesional."
+        echo "  → Si no lo alcanzas, revisa los módulos con menor cobertura."
+        echo "  → Recuerda: cada test adicional fortalece tu confianza en el código."
+        echo ""
+        echo "FIN DEL WORKFLOW 🎯"
