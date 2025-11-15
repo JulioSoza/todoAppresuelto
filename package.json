@@ -4,10 +4,11 @@
   "description": "",
   "main": "src/server.js",
   "scripts": {
+    "test": "jest --detectOpenHandles --forceExit",
+    "test:coverage": "jest --coverage --passWithNoTests",
+    "test:watch": "jest --watch --detectOpenHandles --forceExit",
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
-    "test": "jest --detectOpenHandles --forceExit",
-    "test:watch": "jest --watch --detectOpenHandles --forceExit",
     "docker:up": "docker compose up -d",
     "docker:down": "docker compose down",
     "docker:logs": "docker compose logs -f mongodb",
