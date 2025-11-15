@@ -10,27 +10,24 @@ on:
       - main
 
 jobs:
-  test:
+  coverage-80:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Obtener código
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2. Configurar Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18
           cache: 'npm'
 
-      # 3. Instalar dependencias
       - name: Install dependencies
         run: npm ci
 
-      # 4. Ejecutar tests con coverage (threshold 80% definido en Jest)
       - name: Run tests with coverage
-        run: |
-          echo "Ejecutando tests con coverage (threshold 80% de lineas definido en Jest)..."
-          npm run test:coverage
+        run: npm run test:coverage
+git add .github/workflows/demo-05-coverage-alto.yml
+git commit -m "Simplify Demo 05 workflow to basic 80% coverage"
+git push origin main
