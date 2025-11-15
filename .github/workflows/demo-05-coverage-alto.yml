@@ -1,11 +1,8 @@
-# Demo 05 - Coverage Alto (80%)
-# Aquí la mayoría de proyectos fallan - Es educativo
-
 name: Demo 05 - Coverage 80% (Profesional)
 
 on:
   push:
-    branches: [ main, feature/* ]
+    branches: [ main, 'feature/*' ]
   pull_request:
     branches: [ main ]
 
@@ -14,23 +11,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Obtener código
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2. Configurar Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18
           cache: npm
 
-      # 3. Instalar dependencias
       - name: Install dependencies
         run: npm ci
 
-      # 4. Ejecutar tests con coverage (threshold 80% definido en Jest)
-      - name: Run tests with coverage (80% lines threshold)
+      - name: Run tests with coverage (threshold 80 % en Jest)
         run: |
-          echo "Ejecutando tests con coverage (threshold 80% líneas definido en Jest)..."
+          echo "Ejecutando tests con coverage (threshold 80 % de líneas definido en Jest)..."
           npm run test:coverage
