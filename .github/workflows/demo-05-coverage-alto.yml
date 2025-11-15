@@ -1,66 +1,3 @@
-# Demo 05 - Coverage Alto (80%)
-# Aquí la mayoría de proyectos fallan - Es educativo
-
-name: Demo 05 - Coverage 80% (Profesional)
-
-on:
-  push:
-    branches: [ main, feature/* ]
-  pull_request:
-    branches: [ main ]
-
-env:
-  COVERAGE_THRESHOLD: 80
-
-jobs:
-  coverage-profesional:
-    name: "Coverage Profesional (80%)"
-    runs-on: ubuntu-latest
-
-    steps:
-    # 1. Setup básico
-    - name: Obtener código
-      uses: actions/checkout@v4
-
-    - name: Configurar Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '18'
-        cache: 'npm'
-
-    - name: Instalar dependencias
-      run: npm ci
-
-    # 2. Información sobre este nivel
-    - name: "¿Qué significa coverage 80%?"
-      run: |
-        echo "COVERAGE 80% - NIVEL PROFESIONAL"
-        echo "=================================="
-        echo ""
-        echo "¿Qué significa?"
-        echo "  → 80% de tu código está probado por tests"
-        echo "  → Solo 20% del código sin probar"
-        echo "  → Estándar que esperan las empresas"
-        echo ""
-        echo "¿Por qué la mayoría falla aquí?"
-        echo "  → Necesitas tests para TODOS los casos"
-        echo "  → No solo el 'caso feliz'"
-        echo "  → Incluir validaciones y errores"
-        echo ""
-        echo "Si tu proyecto falla: ¡PERFECTO!"
-        echo "  → Es una oportunidad de aprender"
-        echo "  → Te motiva a escribir mejores tests"
-        echo "  → Cuando lo logres, tendrás código confiable"
-
-    # 3. Ejecutar tests con coverage
-    - name: Ejecutar tests con coverage
-      run: |
-        echo "Ejecutando tests con análisis de coverage..."
-        echo "Umbral objetivo: ${{ env.COVERAGE_THRESHOLD }}%"
-        echo ""
-        npm run test:coverage
-
-    # 4. Verificación de coverage (puede fallar)
     - name: "Verificación de Coverage - Momento de la Verdad"
       run: |
         echo "VERIFICANDO COVERAGE..."
@@ -71,7 +8,7 @@ jobs:
         # Ejecutar pruebas y capturar salida
         COVERAGE_OUTPUT=$(npm run test:coverage 2>&1)
 
-        # Buscar línea que contenga 'All files'
+        # Buscar línea que contenga "All files"
         COVERAGE_LINE=$(echo "$COVERAGE_OUTPUT" | grep "All files" || true)
 
         if [ -n "$COVERAGE_LINE" ]; then
@@ -112,22 +49,3 @@ jobs:
         else
           echo "No se encontró información de coverage en el reporte"
         fi
-
-    # 5. Lección final (siempre se ejecuta)
-    - name: "Lección: ¿Qué aprendemos del Coverage Alto?"
-      if: always()
-      run: |
-        echo ""
-        echo "EXPLICACIÓN DEL REPORTE:"
-        echo "  Columns → | % Stmts | % Branch | % Funcs | % Lines |"
-        echo "  Stmts:    Declaraciones ejecutadas"
-        echo "  Branch:   Ramas de código (if/else) probadas"
-        echo "  Funcs:    Funciones llamadas en tests"
-        echo "  Lines:    Líneas de código ejecutadas"
-        echo ""
-        echo "ANÁLISIS FINAL:"
-        echo "  → Si tu coverage supera 80%, estás a nivel profesional."
-        echo "  → Si no lo alcanzas, revisa los módulos con menor cobertura."
-        echo "  → Recuerda: cada test adicional fortalece tu confianza en el código."
-        echo ""
-        echo "FIN DEL WORKFLOW 🎯"
