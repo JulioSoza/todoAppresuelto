@@ -1,3 +1,6 @@
+# Demo 05 - Coverage Alto (80%)
+# Aquí la mayoría de proyectos fallan - Es educativo
+
 name: Demo 05 - Coverage 80% (Profesional)
 
 on:
@@ -10,24 +13,58 @@ on:
       - main
 
 jobs:
-  coverage-80:
+  coverage-profesional:
+    name: "Coverage Profesional (80%)"
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      # 1. Obtener código
+      - name: Obtener código
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      # 2. Configurar Node.js
+      - name: Configurar Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18
-          cache: 'npm'
+          cache: npm
 
-      - name: Install dependencies
+      # 3. Instalar dependencias
+      - name: Instalar dependencias
         run: npm ci
 
-      - name: Run tests with coverage
-        run: npm run test:coverage
-git add .github/workflows/demo-05-coverage-alto.yml
-git commit -m "Simplify Demo 05 workflow to basic 80% coverage"
-git push origin main
+      # 4. Explicación de qué es 80 % de coverage
+      - name: "¿Qué significa coverage 80%?"
+        run: |
+          echo "COVERAGE 80% - NIVEL PROFESIONAL"
+          echo "=================================="
+          echo ""
+          echo "¿Qué significa?"
+          echo "  80% de tu código está probado por tests."
+          echo "  Solo 20% del código queda sin probar."
+          echo "  Es un estándar común en proyectos profesionales."
+          echo ""
+          echo "Para lograrlo normalmente necesitas:"
+          echo "  - Tests para casos felices."
+          echo "  - Tests para errores y validaciones."
+          echo "  - Probar las funciones y rutas más importantes."
+
+      # 5. Ejecutar tests con coverage (Jest valida el 80% de líneas)
+      - name: Ejecutar tests con coverage
+        run: |
+          echo "Ejecutando tests con análisis de coverage (threshold 80% en Jest)..."
+          npm run test:coverage
+
+      # 6. Lección final sobre el resultado
+      - name: "Lección: interpretación del resultado"
+        if: always()
+        run: |
+          echo ""
+          echo "► El threshold mínimo de coverage está configurado en Jest:"
+          echo "   coverageThreshold.global.lines = 80"
+          echo ""
+          echo "► Cómo interpretar el workflow:"
+          echo "   - Si el paso de tests falló, tu coverage de líneas es menor a 80%."
+          echo "   - Si todo el workflow está en verde, alcanzaste o superaste el 80%."
+          echo ""
+          echo "Con esto cumples el Demo 05: Coverage Alto (80%) y dejas trazado el estándar profesional."

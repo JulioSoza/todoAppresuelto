@@ -1,27 +1,31 @@
 {
   "name": "todoapp",
   "version": "1.0.0",
+  "description": "",
   "main": "src/server.js",
-"scripts": {
-  "start": "node src/server.js",
-  "dev": "nodemon src/server.js",
-  "test": "jest --detectOpenHandles --forceExit",
-  "test:watch": "jest --watch --detectOpenHandles --forceExit",
-  "test:coverage": "jest --coverage --detectOpenHandles --forceExit",
-  "docker:up": "docker compose up -d",
-  "docker:down": "docker compose down",
-  "docker:logs": "docker compose logs -f mongodb",
-  "docker:clean": "docker compose down -v && docker volume prune -f",
-  "docker:mongo": "docker run --name mongodb-todoapp -p 27017:27017 -d mongo:latest"
-},
-"jest": {
-  "testEnvironment": "node",
-  "coverageThreshold": {
-    "global": {
-      "lines": 80
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "test": "jest --detectOpenHandles --forceExit",
+    "test:watch": "jest --watch --detectOpenHandles --forceExit",
+    "test:coverage": "jest --coverage --detectOpenHandles --forceExit",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down",
+    "docker:logs": "docker compose logs -f mongodb",
+    "docker:clean": "docker compose down -v && docker volume prune -f",
+    "docker:mongo": "docker run --name mongodb-todoapp -p 27017:27017 -d mongo:latest"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "coverageThreshold": {
+      "global": {
+        "lines": 80
+      }
     }
-  }
-},
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
   "dependencies": {
     "express": "^5.1.0",
     "mongoose": "^8.18.2"
