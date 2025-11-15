@@ -10,27 +10,42 @@ on:
     branches: [ main ]
 
 jobs:
-  coverage-profesional:
-    name: "Coverage Profesional (80%)"
+  test:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Setup básico
-      - name: Obtener código
+      # 1. Obtener código
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Configurar Node.js
+      # 2. Configurar Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
-          cache: 'npm'
+          node-version: 18
+          cache: npm
 
-      - name: Instalar dependencias
+      # 3. Instalar dependencias
+      - name: Install dependencies
         run: npm ci
 
-      # 2. Ejecutar tests con coverage y threshold del 80% (definido en Jest)
-      - name: Ejecutar tests con coverage (80% líneas)
+      # 4. Ejecutar tests con coverage (threshold 80% definido en Jest)
+      - name: Run tests with coverage
         run: |
-          echo "Ejecutando tests con coverage..."
-          echo "El threshold del 80% en líneas está configurado en Jest (coverageThreshold.global.lines)."
+          echo "Ejecutando tests con coverage (threshold 80% líneas definido en Jest)..."
           npm run test:coverage
+
+      # 5. Comentario educativo sobre el coverage
+      - name: Analyze coverage threshold
+        if: always()
+        run: |
+          echo "Analizando resultado de coverage..."
+          echo ""
+          echo "► El umbral mínimo de coverage está configurado en Jest:"
+          echo "   coverageThreshold.global.lines = 80"
+          echo ""
+          echo "► Interpretación:"
+          echo "   - Si el paso anterior falló, las líneas cubiertas son < 80%."
+          echo "   - Si todo está en verde, tu proyecto cumple el estándar profesional de coverage."
+          echo ""
+          echo "Fin del análisis de coverage para Demo 05."
