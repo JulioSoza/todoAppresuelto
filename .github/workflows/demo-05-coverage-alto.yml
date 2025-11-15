@@ -5,16 +5,19 @@ name: Demo 05 - Coverage 80% (Profesional)
 
 on:
   push:
-    branches: [ main, 'feature/*' ]
+    branches:
+      - main
+      - 'feature/*'
   pull_request:
-    branches: [ main ]
+    branches:
+      - main
 
 env:
   COVERAGE_THRESHOLD: 80
 
 jobs:
-  coverage-profesional:
-    name: 'Coverage Profesional (80%)'
+  test:
+    name: Coverage Profesional (80%)
     runs-on: ubuntu-latest
 
     steps:
@@ -37,63 +40,47 @@ jobs:
       - name: Ejecutar tests con coverage
         run: |
           echo 'Ejecutando tests con análisis de coverage...'
-          echo 'Umbral objetivo: $COVERAGE_THRESHOLD%'
-          echo ''
+          echo 'Umbral objetivo: '${COVERAGE_THRESHOLD}'%'
           npm run test:coverage
 
-      # 5. Analizar resultado de coverage
-      - name: Analizar resultado de coverage
+      # 5. Analizar el coverage
+      - name: Analizar coverage threshold
         shell: bash
         run: |
           echo 'Analizando coverage...'
-          echo '=============================='
-          echo ''
-          
+          echo '============================='
           OUTPUT=$(npm run test:coverage 2>&1)
           LINE=$(echo "$OUTPUT" | grep 'All files' || true)
 
           if [ -n "$LINE" ]; then
             echo 'Línea de coverage encontrada:'
             echo "$LINE"
-            echo ''
-
             PERCENT=$(echo "$LINE" | grep -oE '[0-9]+\.[0-9]+' | head -1)
-            echo "Coverage extraído: $PERCENT%"
+            echo 'Coverage extraído:' $PERCENT'%'
 
             VALUE=$(echo "$PERCENT" | cut -d'.' -f1)
             TARGET=$COVERAGE_THRESHOLD
 
-            echo ''
-            echo 'RESULTADO DE LA VERIFICACIÓN:'
-            echo "  Coverage actual: $VALUE%"
-            echo "  Threshold objetivo: $TARGET%"
-            echo ''
-
             if [ "$VALUE" -lt "$TARGET" ]; then
               echo 'COVERAGE INSUFICIENTE ❌'
-              echo "Faltante: $((TARGET - VALUE))%"
-              echo ''
-              echo '👉 Esto es normal: la mayoría de proyectos fallan aquí.'
-              echo '   Es una oportunidad para mejorar tus tests.'
+              echo 'Faltante:' $((TARGET - VALUE))'%'
               exit 1
             else
               echo 'COVERAGE EXCELENTE ✅'
-              echo '¡Felicitaciones! Tu proyecto alcanza un nivel profesional.'
             fi
           else
             echo 'No se encontró información de coverage en el reporte.'
             exit 1
           fi
 
-      # 6. Lección final (siempre se ejecuta)
-      - name: 'Lección: ¿Qué aprendemos del Coverage Alto?'
+      # 6. Lección final
+      - name: Lección final
         if: always()
         shell: bash
         run: |
           echo ''
           echo 'LECCIÓN FINAL'
           echo '=============================='
-          echo ''
           echo 'Columns → | % Stmts | % Branch | % Funcs | % Lines |'
           echo 'Stmts: Declaraciones ejecutadas'
           echo 'Branch: Ramas de código probadas'
@@ -101,7 +88,6 @@ jobs:
           echo 'Lines: Líneas de código ejecutadas'
           echo ''
           echo '→ 80% de coverage es un estándar profesional.'
-          echo '→ Si tu workflow falla aquí, significa que debes escribir más tests.'
-          echo '→ Cada punto adicional de coverage representa más confianza en tu código.'
-          echo ''
+          echo '→ Si tu workflow falla aquí, debes escribir más tests.'
+          echo '→ Cada punto adicional representa más confianza en tu código.'
           echo 'FIN DEL WORKFLOW 🎯'
