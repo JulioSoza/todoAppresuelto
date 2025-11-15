@@ -35,17 +35,19 @@ jobs:
           echo "Ejecutando tests con coverage (threshold 80% líneas definido en Jest)..."
           npm run test:coverage
 
-      # 5. Comentario educativo sobre el coverage
+      # 5. Comentario educativo sobre el coverage (sin comillas raras)
       - name: Analyze coverage threshold
         if: always()
         run: |
-          echo "Analizando resultado de coverage..."
-          echo ""
-          echo "► El umbral mínimo de coverage está configurado en Jest:"
-          echo "   coverageThreshold.global.lines = 80"
-          echo ""
-          echo "► Interpretación:"
-          echo "   - Si el paso anterior falló, las líneas cubiertas son < 80%."
-          echo "   - Si todo está en verde, tu proyecto cumple el estándar profesional de coverage."
-          echo ""
-          echo "Fin del análisis de coverage para Demo 05."
+          cat << 'EOF'
+          Analizando resultado de coverage...
+
+          ► El umbral mínimo de coverage está configurado en Jest:
+             coverageThreshold.global.lines = 80
+
+          ► Interpretación:
+             - Si el paso anterior falló, las líneas cubiertas son < 80%.
+             - Si todo está en verde, tu proyecto cumple el estándar profesional de coverage.
+
+          Fin del análisis de coverage para Demo 05.
+          EOF
